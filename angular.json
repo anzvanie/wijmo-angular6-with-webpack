@@ -23,6 +23,7 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/wijmo/styles/wijmo.css",
               "src/styles.css"
             ],
             "scripts": []
