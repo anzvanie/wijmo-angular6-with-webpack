@@ -1,10 +1,23 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<h2>GC People</h2>
+Data source url: <input id="url" [value]="url" (change)="inputTextChanged($event)"/>
 
-<wj-flex-grid #grid [itemsSource]="data">
-  <wj-flex-grid-column [header]="'Person'" [binding]="'person'"></wj-flex-grid-column>
-  <wj-flex-grid-column [header]="'Age'" [binding]="'age'"></wj-flex-grid-column>
-  <wj-flex-grid-column [header]="'Salary'" [binding]="'salary'" [format]="'n0'"></wj-flex-grid-column>
+<h4>Sort by:
+  <input readonly/>
+  <select (change)="sortChanged($event)" name="sortby">
+    <option value="No sort">No sort</option>
+    <option *ngFor="let column of grid.columns" [value]="column.name">{{column.name}}</option>
+  </select>
+  <button>Add column</button>
+</h4>
+
+<h4>Filter by:
+  <select (change)="filterChanged($event)" name="filter">
+    <option value="No filter">No sort</option>
+    <option *ngFor="let column of grid.columns" [value]="column.name">{{column.name}}</option>
+  </select>
+</h4>
+
+<wj-flex-grid id="grid" #grid [itemsSource]="dataView">
 </wj-flex-grid>
 
 

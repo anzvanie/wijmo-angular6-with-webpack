@@ -1,0 +1,14 @@
+#url {
+  display: inline-block;
+  width: 500px;
+}
+
+/*
+wj-flex-grid#grid {
+  max-height: calc(100% - 50px);
+}
+*/
+
+li {
+  list-style: none;
+}

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { WjGridModule } from 'wijmo/wijmo.angular2.grid';
 
 import { AppComponent } from './app.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -10,6 +11,7 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     WjGridModule
   ],
   providers: [],
