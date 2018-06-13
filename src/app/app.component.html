@@ -1,23 +1,49 @@
 <!--The content below is only a placeholder and can be replaced.-->
-Data source url: <input id="url" [value]="url" (change)="inputTextChanged($event)"/>
-
-<h4>Sort by:
-  <input readonly/>
-  <select (change)="sortChanged($event)" name="sortby">
-    <option value="No sort">No sort</option>
-    <option *ngFor="let column of grid.columns" [value]="column.name">{{column.name}}</option>
-  </select>
-  <button>Add column</button>
+<h4>Data URL
+  <input id="url" [value]="url" (change)="dataUrlChange($event)"/>
 </h4>
 
-<h4>Filter by:
-  <select (change)="filterChanged($event)" name="filter">
-    <option value="No filter">No sort</option>
+<h4>Sort formula
+  <input (change)="sortChange($event)" [(ngModel)]="sortFormula" class="formula"/>
+  <span class="spacer"></span>
+  Column
+  <select name="sortcolumn" [(ngModel)]="sortColumn">
     <option *ngFor="let column of grid.columns" [value]="column.name">{{column.name}}</option>
   </select>
+  <span class="spacer"></span>
+  Order by
+  <input type="radio" value="asc" name="sortroder" checked [(ngModel)]="sortOrder"/>asc
+  <input type="radio" value="desc" name="sortroder" [(ngModel)]="sortOrder"/>desc
+  <button (click)="addSortClick()">Add condition</button>
 </h4>
+
+<h4>Group by
+  <input (change)="groupByChange()" [(ngModel)]="groupByFormula" class="formula"/>
+  <span class="spacer"></span>
+  Column
+  <select name="groupcolumn" [(ngModel)]="groupByColumn">
+    <option *ngFor="let column of grid.columns" [value]="column.name">{{column.name}}</option>
+  </select>
+  <span class="spacer"></span>
+  <button (click)="addGroupByClick()">Add condition</button>
+</h4>
+
+<!--
+<h4>Filter formula
+  <input (change)="filterChanged($event)" [(ngModel)]="filterFormula" class="formula"/>
+  <span class="spacer"></span>
+  Column
+  <select name="filtercolumn" [(ngModel)]="filterColumn">
+    <option *ngFor="let column of grid.columns" [value]="column.name">{{column.name}}</option>
+  </select>
+  <span class="spacer"></span>
+  Codition
+  <input [(ngModel)]="filterCondition"/>
+  <span class="spacer"></span>
+  <button (click)="addFilterClicked()">Add condition</button>
+</h4>
+-->
 
 <wj-flex-grid id="grid" #grid [itemsSource]="dataView">
+    <wj-flex-grid-filter #filter></wj-flex-grid-filter>
 </wj-flex-grid>
-
-

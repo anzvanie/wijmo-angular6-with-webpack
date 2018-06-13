@@ -1,6 +1,8 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { WjFlexGrid } from 'wijmo/wijmo.angular2.grid';
-import * as wijmo from 'wijmo/wijmo';
+import * as wjFlexGrid from 'wijmo/wijmo.angular2.grid';
+import * as wjcCore from 'wijmo/wijmo';
+
+const DEFAULT_FORMAT = 'json';
 
 @Component({
   selector: 'app-root',
@@ -8,38 +10,38 @@ import * as wijmo from 'wijmo/wijmo';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  @ViewChild('grid') grid: WjFlexGrid;
+  @ViewChild('grid') grid: wjFlexGrid.WjFlexGrid;
 
+  // Northwind sample data's url
   url = 'http://services.odata.org/Northwind/Northwind.svc/Products';
 
-  // data: any[];
+  dataView = new wjcCore.CollectionView();
 
-  dataView = new wijmo.CollectionView();
+  // Sort
+  sortFormula = '';
+  sortColumn = '';
+  sortOrder = 'asc';
 
-  ngOnInit(): void {
-    /** Bruce: Dummy data */
-    // const people = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S'.split(',');
-    // const minAge = 23, maxAge = 35;
-    // this.data = [];
+  // Filter
+  // filterFormula = '';
+  // filterColumn = '';
+  // filterCondition = '';
 
-    // for (let i = 0; i < people.length; i++) {
-    //   this.data.push({
-    //     person: people[i],
-    //     age: Math.floor(Math.random() * (maxAge - minAge + 1)) + minAge,
-    //     salary: Math.floor(Math.random() * 1000),
-    //   });
-    // }
+  // Group
+  groupByFormula = '';
+  groupByColumn = '';
 
+  ngOnInit() {
     this.loadData();
   }
 
   loadData(): void {
     const self = this;
     const params = {
-      $format: 'json'
+      $format: DEFAULT_FORMAT
     };
 
-    wijmo.httpRequest(
+    wjcCore.httpRequest(
       self.url,
       {
         data: params,
@@ -53,26 +55,107 @@ export class AppComponent implements OnInit {
 
           // Auto resize column to fit cell data
           self.grid.autoSizeColumns();
+
+          // Set sort column default value
+          if (self.grid.columns.length) {
+            self.sortColumn = self.grid.columns[0].name;
+            self.groupByColumn = self.grid.columns[0].name;
+            // self.filterColumn = self.grid.columns[0].name;
+          }
         }
       }
     );
   }
 
-  inputTextChanged(event) {
+  dataUrlChange(event) {
     this.url = event.target.value;
     this.loadData();
   }
 
-  sortChanged(event) {
-    this.dataView.sortDescriptions.clear();
-    const sortKey = event.target.value;
-    if (sortKey !== 'No sort') {
-      const sd = new wijmo.SortDescription(sortKey, true);
-      this.dataView.sortDescriptions.push(sd);
-      this.grid.autoSizeColumns();
+  sortChange(event?) {
+    if (event) {
+      this.sortFormula = event.target.value;
     }
+
+    this.dataView.sortDescriptions.clear();
+
+    const conditions = this.sortFormula.split(',');
+    for (let i = 0; i < conditions.length; i++) {
+      const detailCondition = conditions[i].split('|');
+      const isAsc = detailCondition.length === 1 || (detailCondition[1] !== 'desc');
+      const sd = new wjcCore.SortDescription(detailCondition[0], isAsc);
+      this.dataView.sortDescriptions.push(sd);
+    }
+
+    this.grid.autoSizeColumns();
   }
 
-  filterChanged(event) {
+  addSortClick() {
+
+    const newCondition = `${this.sortColumn}|${this.sortOrder}`;
+
+    if (this.sortFormula.includes(this.sortColumn)) {
+      const searchRegex = new RegExp(`${this.sortColumn}\\|(asc|desc)`);
+      this.sortFormula = this.sortFormula.replace(searchRegex, newCondition);
+    } else {
+      if (this.sortFormula) {
+        this.sortFormula += ',';
+      }
+      this.sortFormula += newCondition;
+    }
+
+    this.sortChange();
   }
+
+  groupByChange(event?) {
+    if (event) {
+      this.groupByFormula = event.target.value;
+    }
+
+    this.dataView.beginUpdate();
+    this.dataView.groupDescriptions.clear();
+
+    if (this.groupByFormula) {
+      const conditions = this.groupByFormula.split(',');
+      for (let i = 0; i < conditions.length; i++) {
+        const gd = new wjcCore.PropertyGroupDescription(conditions[i]);
+        this.dataView.groupDescriptions.push(gd);
+      }
+    }
+
+    this.dataView.refresh();
+    this.dataView.endUpdate();
+  }
+
+  addGroupByClick() {
+    if (!this.groupByFormula.includes(this.groupByColumn)) {
+      if (this.groupByFormula) {
+        this.groupByFormula += ',';
+      }
+
+      this.groupByFormula += this.groupByColumn;
+    }
+
+    this.groupByChange();
+  }
+
+  // filterChange(event) {
+  //   if (event) {
+  //     this.filterFormula = event.target.value;
+  //   }
+  // }
+
+  // addFilterClick() {
+  //   if (!this.filterCondition) {
+  //     return;
+  //   }
+  //   const newCondition = `${this.filterColumn}|${this.filterCondition}`;
+  //   if (!this.filterFormula.includes(newCondition)) {
+  //     if (this.filterFormula) {
+  //       this.filterFormula += ',';
+  //     }
+  //     this.filterFormula += newCondition;
+  //   }
+  // }
+
 }

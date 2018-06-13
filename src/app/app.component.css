@@ -12,3 +12,14 @@ wj-flex-grid#grid {
 li {
   list-style: none;
 }
+
+.spacer {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+}
+
+.formula {
+  display: inline-block;
+  width: 500px;
+}

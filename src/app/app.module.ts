@@ -1,9 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { WjGridModule } from 'wijmo/wijmo.angular2.grid';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import * as wjFlexGrid from 'wijmo/wijmo.angular2.grid';
+import * as wjFlexGridFilter from 'wijmo/wijmo.angular2.grid.filter';
 
 import { AppComponent } from './app.component';
-import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -12,7 +15,9 @@ import { CommonModule } from '@angular/common';
   imports: [
     BrowserModule,
     CommonModule,
-    WjGridModule
+    FormsModule,
+    wjFlexGrid.WjGridModule,
+    wjFlexGridFilter.WjGridFilterModule
   ],
   providers: [],
   bootstrap: [AppComponent]
