@@ -1,4 +1,4 @@
-# Wijmo demo using Angular v5 or v6 with Webpack bunlde loader
+# Wijmo demo using Angular v5 or v6 with Webpack bundle loader
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
 
